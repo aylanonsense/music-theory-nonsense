@@ -143,7 +143,7 @@ function calcRatios(...notes) {
 	return simplify(...ratios);
 }
 
-module.exports = function findFrequencyRatio(...noteStrings) {
+module.exports = function findFrequencyRatios(...noteStrings) {
 	let notes = noteStrings.map(parseNote);
 	return calcRatios(...notes);
 };

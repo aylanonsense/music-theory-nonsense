@@ -1,17 +1,22 @@
-const findFrequencyRatios = require('./findFrequencyRatios');
+const findFrequencyRatios = require('./perceptual');
 
 let notes = [ 'C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4' ];
 
 function measureDissonance(...notes) {
-	let ratios = findFrequencyRatios(...notes);
-	let ratiosWithoutKey = findFrequencyRatios(...(notes.slice(1)));
-	return { notes: notes, dissonance: ratios[0], ratios, ratiosWithoutKey };
-	// console.log(`${notes.join(' : ')}   ${'*'.repeat(ratios[0])}`);
+	let results = findFrequencyRatios(...notes);
+	let resultsWithoutKey = findFrequencyRatios(...(notes.slice(1)));
+	return {
+		notes,
+		ratios: results.ratios,
+		dissonance: results.error,
+		dissonanceDisplay: Math.round(results.error * 10000) / 100,
+		dissonanceDisplayWithoutKey: Math.round(resultsWithoutKey.error * 10000) / 100,
+	}
 }
 
 function printResults(r) {
 	r.sort((a,b) => a.dissonance - b.dissonance);
-	r.forEach(({ notes, dissonance, ratios, ratiosWithoutKey }) => console.log(`${notes.slice(1).map(n => n.slice(0,-1)).join('')}   =>   ${ratios.join(' : ')}      /      ${ratiosWithoutKey.join(' : ')}`));
+	r.forEach(({ notes, ratios, dissonance, dissonanceDisplay, dissonanceDisplayWithoutKey }) => console.log(`${notes.slice(1).map(n => n.slice(0,-1)).join('')}   =>   ${dissonanceDisplay}%  /  ${dissonanceDisplayWithoutKey}%     ${ratios.join(' : ')}`));
 	console.log('');
 }
 

@@ -14,6 +14,51 @@ const FREQUENCY_RATIOS = [
 	[ 15, 8 ]	// C : B	major seventh
 ];
 
+// function testFrequencyRatios(i, j) {
+// 	// e.g. C E F
+// 	let [ r1, r2 ] = FREQUENCY_RATIOS[i];
+// 	let [ r3, r4 ] = FREQUENCY_RATIOS[j];
+// 	let first = r1 * r3;
+// 	let second = r2 * r3;
+// 	let third = r4 * r1;
+// 	let ratios = simplify(first, second, third);
+// 	let expected = FREQUENCY_RATIOS[j - i];
+// 	let ratios2 = simplify(ratios[1], ratios[2]);
+// 	if (expected[0] !== ratios2[0] || expected[1] !== ratios2[1]) {
+// 		console.log('NOOP', i, j);
+// 		console.log('  actual:  ', ratios2);
+// 		console.log('  expected:', expected);
+// 	}
+// 	else {
+// 		// console.log('YAHP', i, j);
+// 	}
+// }
+
+// testFrequencyRatios(1, 2);
+// for (let i = 0; i < FREQUENCY_RATIOS.length; i++) {
+// 	for (let j = i; j < FREQUENCY_RATIOS.length; j++) {
+// 		testFrequencyRatios(i, j);
+// 	}
+// }
+
+
+// CE   5 4
+// CF   4 3
+// EF  16 15
+
+// CEF  20 16 15
+
+// CGA  
+
+//
+
+// CD 1 : 4
+// DE 3 : 2
+// CE 3 : 8
+
+// 3 : 12 : 8
+// CDE
+
 function parseNote(noteString) {
 	let octave = +noteString.slice(-1);
 	let note = noteString.slice(0, -1);
@@ -64,7 +109,7 @@ function findFrequencyRatio(note1, note2) {
 }
 
 function simplify(...args) {
-	for (let i = 2; i < Math.max(...args); i++) {
+	for (let i = 2; i <= Math.max(...args); i++) {
 		let isDivisble = true;
 		for (let j = 0; j < args.length; j++) {
 			if (args[j] % i !== 0) {
@@ -73,7 +118,7 @@ function simplify(...args) {
 		}
 		if (isDivisble) {
 			args = args.map(n => Math.round(n / i));
-			i = 2;
+			i = 1;
 		}
 	}
 	return args;
@@ -87,6 +132,14 @@ function calcRatios(...notes) {
 			ratios[j] *= (j === i ? freq2 : freq1);
 		}
 	}
+	// for (let i = 0; i < notes.length; i++) {
+	// 	for (let j = i + 1; j < notes.length; j++) {
+	// 		let [ freq1, freq2 ] = findFrequencyRatio(notes[i], notes[j]);
+	// 		for (let k = 0; k < notes.length; k++) {
+	// 			// ratios[j] *= (j === i ? freq2 : freq1);
+	// 		}
+	// 	}
+	// }
 	return simplify(...ratios);
 }
 

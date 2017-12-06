@@ -9,9 +9,9 @@ const FREQUENCY_RATIOS = [
 	[ 24, 17 ],	// C : F#	tritone
 	[ 3, 2 ],	// C : G	perfect fifth
 	[ 8, 5 ],	// C : G#	minor sixth
-	[ 5, 6 ],	// C : A	major sixth
-	[ 7, 8 ],	// C : A#	minor seventh
-	[ 15, 16 ]	// C : B	major seventh
+	[ 5, 3 ],	// C : A	major sixth
+	[ 7, 4 ],	// C : A#	minor seventh
+	[ 15, 8 ]	// C : B	major seventh
 ];
 
 function parseNote(noteString) {
@@ -21,9 +21,6 @@ function parseNote(noteString) {
 	if (note.endsWith('b')) {
 		note = note.slice(0, -1);
 		noteOffset = -1;
-		if (note.startsWith('A')) {
-			octave -= 1;
-		}
 	}
 	if (note.endsWith('#')) {
 		note = note.slice(0, -1);
@@ -32,12 +29,13 @@ function parseNote(noteString) {
 	note = NOTE_SEQUENCE.indexOf(note) + noteOffset;
 	if (note < 0) {
 		note += NOTE_SEQUENCE.length;
+		octave -= 1;
 	}
 	else if (note >= NOTE_SEQUENCE.length) {
 		note -= NOTE_SEQUENCE.length;
+		octave += 1;
 	}
 	let index = octave * NOTE_SEQUENCE.length + note - 9
-	console.log(noteString, index);
 	return {
 		note,
 		octave,
@@ -48,7 +46,6 @@ function parseNote(noteString) {
 
 function findFrequencyRatio(note1, note2) {
 	let diff = note2.index - note1.index;
-	console.log('note diff', diff);
 	let freq1
 	let freq2
 	if (diff >= 0) {
@@ -76,6 +73,7 @@ function simplify(...args) {
 		}
 		if (isDivisble) {
 			args = args.map(n => Math.round(n / i));
+			i = 2;
 		}
 	}
 	return args;
